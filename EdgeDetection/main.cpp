@@ -1,4 +1,3 @@
-#include "Convolution.h"
 #include "EdgeDetector.h"
 #include <iostream>
 #include <string>
@@ -13,7 +12,7 @@ int main(int argc, char** argv) {
 	string method = string(argv[3]);
 
 	// Initialize image by OpenCV
-	Mat srcImg = imread(inputPath, IMREAD_COLOR);
+	Mat srcImg = imread(inputPath, IMREAD_GRAYSCALE);
 	Mat dstImg;
 
 	// Check the source image is empty
@@ -28,7 +27,9 @@ int main(int argc, char** argv) {
 	// Processing image
 	if (method == "-sobel") {
 		// Sobel
-
+		if (edgeDetector->detectBySobel(srcImg, dstImg)) {
+			imwrite(outputPath, dstImg);
+		}
 	}
 	else if (method == "-prewitt") {
 		// Prewitt
