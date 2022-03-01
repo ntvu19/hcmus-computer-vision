@@ -10,16 +10,14 @@ public:
 	 * Edge detector class for image
 	 * srcImg: input image
 	 * dstImg: output image
-	 * method:
-	 *		1: Sobel
-	 *		2: Prewitt
-	 *		3: Laplace
-	 *		4: Canny
 	 * return:
-	 *		false: failed
-	 *		true: successed
+	 *		0: failed
+	 *		1: successed
 	*/
-	int DetectEdge(const Mat& srcImg, Mat& dstImg, int method);
+	int detectBySobel(const Mat& srcImg, Mat& dstImg);
+	int detectByPrewitt(const Mat& srcImg, Mat& dstImg);
+	int detectByLaplace(const Mat& srcImg, Mat& dstImg);
+	int detectByCanny(const Mat& srcImg, Mat& dstImg);
 	EdgeDetector();
 	~EdgeDetector();
 };
