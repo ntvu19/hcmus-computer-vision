@@ -21,7 +21,7 @@ public:
 	*		0: failed
 	*		1: successed
 	*/
-	int DoConvolution(const Mat& srcImg, Mat& dstImg);
+	int DoConvolution(Mat& srcImg, Mat& dstImg);
 	Convolution();
 	~Convolution();
 };
