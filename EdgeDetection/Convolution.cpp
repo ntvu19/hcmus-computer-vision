@@ -14,8 +14,8 @@ vector<float> Convolution::GetKernel() {
 	return this->_kernel;
 }
 
-void SetKernel(vector<float> kernel, int kWidth, int kHeight) {
-	
+void Convolution::SetKernel(vector<float> kernel) {
+	this->_kernel.assign(kernel.begin(), kernel.end());
 }
 
 int Convolution::DoConvolution(const Mat& srcImg, Mat& dstImg) {
