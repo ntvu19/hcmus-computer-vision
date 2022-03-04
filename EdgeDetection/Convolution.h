@@ -9,19 +9,21 @@ class Convolution
 {
 private:
 	vector<float> _kernel;
+	int _kernelWidth;
+	int _kernalHeight;
 public:
 	vector<float> GetKernel();
-	void SetKernel(vector<float> kernel);
+	void SetKernel(vector<float> kernel, int kWidth, int kHeight);
 
 	/*
 	* Apply convolution for the image functions using defined kernel
 	* srcImg: input image
 	* dstImg: output image
 	* return:
-	*		0: failed
-	*		1: successed
+	*		false: failed
+	*		true: successed
 	*/
-	int DoConvolution(Mat& srcImg, Mat& dstImg);
+	int DoConvolution(const Mat& srcImg, Mat& dstImg);
 	Convolution();
 	~Convolution();
 };

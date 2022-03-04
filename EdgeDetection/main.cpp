@@ -13,7 +13,7 @@ int main(int argc, char** argv) {
 
 	// Initialize image by OpenCV
 	Mat srcImg = imread(inputPath, IMREAD_GRAYSCALE);
-	Mat dstImg;
+	Mat dstImg, dst;
 
 	// Check the source image is empty
 	if (!srcImg.data) {
@@ -22,7 +22,7 @@ int main(int argc, char** argv) {
 	}
 
 	// EdgeDetector object
-	EdgeDetector *edgeDetector = new EdgeDetector();
+	EdgeDetector* edgeDetector = new EdgeDetector();
 
 	// Processing image
 	if (method == "-sobel") {
@@ -33,14 +33,22 @@ int main(int argc, char** argv) {
 	}
 	else if (method == "-prewitt") {
 		// Prewitt
-
+		if (edgeDetector->detectByPrewitt(srcImg, dstImg)) {
+			imwrite(outputPath, dstImg);
+		}
 	}
 	else if (method == "-laplace") {
 		// Laplace
+		if (edgeDetector->detectByLaplace(srcImg, dstImg)) {
+			imwrite(outputPath, dstImg);
+		}
 
 	}
 	else if (method == "-canny") {
 		// Canny
+		if (edgeDetector->detectByCanny(srcImg, dstImg)) {
+			imwrite(outputPath, dstImg);
+		}
 
 	}
 	else {
@@ -52,9 +60,8 @@ int main(int argc, char** argv) {
 
 	// Show image
 	//imshow("Image", dstImg);
-
 	// Save image
-	//imwrite(outputPath, dstImg);
+	/*imwrite(outputPath, dstImg);*/
 	waitKey(0);
 	delete edgeDetector;
 	return 0;
