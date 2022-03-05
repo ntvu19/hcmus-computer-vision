@@ -18,11 +18,23 @@ void Convolution::SetKernel(vector<float> kernel) {
 	this->_kernel.assign(kernel.begin(), kernel.end());
 }
 
+Mat Convolution::createZeroPadding(const Mat& srcImg, int paddingValue) {
+	int width = srcImg.cols,
+		height = srcImg.rows;
+	Mat zeroPadding(height + paddingValue * 2, width + paddingValue * 2, CV_8UC1, Scalar(0, 0, 0));
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			zeroPadding.at<uchar>(i + paddingValue, j + paddingValue) = srcImg.at<uchar>(i, j);
+		}
+	}
+	return zeroPadding;
+}
+
 Mat Convolution::DoConvolution(const Mat& srcImg) {
 	// Zero padding
 	int kernelEdge = (int)sqrt(this->_kernel.size());
 	int padding = kernelEdge / 2;
-	Mat zeroPadding = GlobalProcess::createNZeroPadding(srcImg, padding);
+	Mat zeroPadding = this->createZeroPadding(srcImg, padding);
 
 	// Apply convolution
 	int width = zeroPadding.rows,

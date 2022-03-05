@@ -21,13 +21,11 @@ int EdgeDetector::detectBySobel(const Mat& srcImg, Mat& dstImg) {
 	vector<float> xSobelKernel = { -1, -2, -1, 0, 0, 0, 1, 2, 1 };
 	convolution->SetKernel(xSobelKernel);
 	Mat xDerivateImg = convolution->DoConvolution(srcImg);
-	//imshow("X-direction", xDerivateImg);
 
 	// Y-direction
 	vector<float> ySobelKernel = { -1, 0, 1, -2, 0, 2, -1, 0, 1 };
 	convolution->SetKernel(ySobelKernel);
 	Mat yDerivateImg = convolution->DoConvolution(srcImg);
-	//imshow("Y-direction", yDerivateImg);
 
 	// Final image (result)
 	dstImg = srcImg.clone();
@@ -41,6 +39,17 @@ int EdgeDetector::detectBySobel(const Mat& srcImg, Mat& dstImg) {
 			dstImg.at<uchar>(i, j) = gValue;
 		}
 	}
+
+	// Show result
+	// x-direction
+	xDerivateImg.convertTo(xDerivateImg, CV_8UC1);
+	imshow("X-direction", xDerivateImg);
+	// y-direction
+	yDerivateImg.convertTo(yDerivateImg, CV_8UC1);
+	imshow("Y-direction", yDerivateImg);
+	// Final result
+	imshow("Result", dstImg);
+
 	delete convolution;
 	return 1;
 }
@@ -75,6 +84,17 @@ int EdgeDetector::detectByPrewitt(const Mat& srcImg, Mat& dstImg) {
 			dstImg.at<uchar>(i, j) = gValue;
 		}
 	}
+
+	// Show result
+	// x-direction
+	xDerivateImg.convertTo(xDerivateImg, CV_8UC1);
+	imshow("X-direction", xDerivateImg);
+	// y-direction
+	yDerivateImg.convertTo(yDerivateImg, CV_8UC1);
+	imshow("Y-direction", yDerivateImg);
+	// Final result
+	imshow("Result", dstImg);
+
 	delete convolution;
 	return 1;
 }
@@ -99,6 +119,10 @@ int EdgeDetector::detectByLaplace(const Mat& srcImg, Mat& dstImg) {
 			dstImg.at<uchar>(i, j) = gValue;
 		}
 	}
+
+	// Show result
+	imshow("Result", dstImg);
+
 	delete convolution;
 	return 1;
 }
@@ -184,8 +208,6 @@ int EdgeDetector::detectByCanny(const Mat& srcImg, Mat& dstImg) {
 	dstImg = srcImg.clone();
 	for (int i = 0; i < width; i++) {
 		for (int j = 0; j < height; j++) {
-			int gx = xDerivateImg.at<int>(i, j);
-			int gy = yDerivateImg.at<int>(i, j);
 			// calculate gradient
 			int g = gValue[i][j];
 			g = (g > 255) ? 255 : g;
@@ -193,6 +215,16 @@ int EdgeDetector::detectByCanny(const Mat& srcImg, Mat& dstImg) {
 			dstImg.at<uchar>(i, j) = g;
 		}
 	}
+
+	// Show result
+	// x-direction
+	xDerivateImg.convertTo(xDerivateImg, CV_8UC1);
+	imshow("X-direction", xDerivateImg);
+	// y-direction
+	yDerivateImg.convertTo(yDerivateImg, CV_8UC1);
+	imshow("Y-direction", yDerivateImg);
+	// Final result
+	imshow("Result", dstImg);
 
 	delete convolution;
 	return 1;

@@ -2,7 +2,6 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <vector>
-#include "GlobalProcess.h"
 using namespace cv;
 using namespace std;
 
@@ -13,6 +12,7 @@ private:
 public:
 	vector<float> GetKernel();
 	void SetKernel(vector<float> kernel);
+	Mat createZeroPadding(const Mat& srcImg, int paddingValue);
 
 	/*
 	* Apply convolution for the image functions using defined kernel
