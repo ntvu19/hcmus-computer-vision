@@ -21,4 +21,3 @@ Mat GlobalProcess::createNZeroPadding(const Mat& srcImg, int paddingValue) {
 	}
 	return zeroPadding;
 }
-

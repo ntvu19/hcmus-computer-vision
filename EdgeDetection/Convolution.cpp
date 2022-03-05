@@ -18,27 +18,27 @@ void Convolution::SetKernel(vector<float> kernel) {
 	this->_kernel.assign(kernel.begin(), kernel.end());
 }
 
-vector<vector<int>> Convolution::DoConvolution(const Mat& srcImg) {
+Mat Convolution::DoConvolution(const Mat& srcImg) {
+	// Zero padding
+	int kernelEdge = (int)sqrt(this->_kernel.size());
+	int padding = kernelEdge / 2;
+	Mat zeroPadding = GlobalProcess::createNZeroPadding(srcImg, padding);
+
 	// Apply convolution
-	int width = srcImg.rows,
-		height = srcImg.cols;
-	vector<vector<int>> dstImg;
-	dstImg.resize(width);
-	for (int i = 0; i < dstImg.size(); i++) {
-		dstImg[i].resize(height);
-	}
+	int width = zeroPadding.rows,
+		height = zeroPadding.cols;
+	Mat dstImg(srcImg.rows, srcImg.cols, CV_32SC1);
 
-
-	for (int i = 1; i < width - 1; i++) {
-		for (int j = 1; j < height - 1; j++) {
+	for (int i = padding; i < height - padding; i++) {
+		for (int j = padding; j < width - padding; j++) {
 			// Convolution
 			int pixelValue = 0;
-			for (int y = 0; y < 3; y++) {
-				for (int x = 0; x < 3; x++) {
-					pixelValue += int(srcImg.at<uchar>(i + y - 1, j + x - 1) * this->_kernel[y * 3 + x]);
+			for (int y = 0; y < kernelEdge; y++) {
+				for (int x = 0; x < kernelEdge; x++) {
+					pixelValue += int(zeroPadding.at<uchar>(i + y - padding, j + x - padding) * this->_kernel[y * kernelEdge + x]);
 				}
 			}
-			dstImg[i - 1][j - 1] = pixelValue;
+			dstImg.at<int>(i - padding, j - padding) = pixelValue;
 		}
 	}
 	return dstImg;
