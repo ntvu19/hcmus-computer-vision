@@ -56,13 +56,7 @@ int main(int argc, char** argv) {
 		delete edgeDetector;
 		return 1;
 	}
-
-
-	// Show image
-	//imshow("Image", dstImg);
-	// Save image
-	/*imwrite(outputPath, dstImg);*/
-	waitKey(0);
 	delete edgeDetector;
+	waitKey(0);
 	return 0;
 }

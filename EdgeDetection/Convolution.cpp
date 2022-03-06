@@ -35,10 +35,9 @@ Mat Convolution::DoConvolution(const Mat& srcImg) {
 	int kernelEdge = (int)sqrt(this->_kernel.size());
 	int padding = kernelEdge / 2;
 	Mat zeroPadding = this->createZeroPadding(srcImg, padding);
-
 	// Apply convolution
-	int width = zeroPadding.rows,
-		height = zeroPadding.cols;
+	int height = zeroPadding.rows,
+		width = zeroPadding.cols;
 	Mat dstImg(srcImg.rows, srcImg.cols, CV_32SC1);
 
 	for (int i = padding; i < height - padding; i++) {

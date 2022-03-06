@@ -26,7 +26,7 @@ int EdgeDetector::detectBySobel(const Mat& srcImg, Mat& dstImg) {
 	vector<float> ySobelKernel = { -1, 0, 1, -2, 0, 2, -1, 0, 1 };
 	convolution->SetKernel(ySobelKernel);
 	Mat yDerivateImg = convolution->DoConvolution(srcImg);
-
+	
 	// Final image (result)
 	dstImg = srcImg.clone();
 	for (int i = 0; i < width; i++) {
@@ -64,13 +64,11 @@ int EdgeDetector::detectByPrewitt(const Mat& srcImg, Mat& dstImg) {
 	vector<float> xPrewittKernel = { -1, -1, -1, 0, 0, 0, 1, 1, 1 };
 	convolution->SetKernel(xPrewittKernel);
 	Mat xDerivateImg = convolution->DoConvolution(srcImg);
-	//imshow("X-direction", xDerivateImg);
 
 	// Y-direction
 	vector<float> yPrewittKernel = { 1, 0, -1, 1, 0, -1, 1, 0, -1 };
 	convolution->SetKernel(yPrewittKernel);
 	Mat yDerivateImg = convolution->DoConvolution(srcImg);
-	//imshow("Y-direction", yDerivateImg);
 
 	// Final image (result)
 	dstImg = srcImg.clone();
@@ -146,13 +144,11 @@ int EdgeDetector::detectByCanny(const Mat& srcImg, Mat& dstImg) {
 	vector<float> xCannyKernel = { -1, -2, -1, 0, 0, 0, 1, 2, 1 };
 	convolution->SetKernel(xCannyKernel);
 	Mat xDerivateImg = convolution->DoConvolution(bluredImg);
-	//imshow("X-direction", xDerivateImg);
 
 	// Y-direction
 	vector<float> yCannyKernel = { -1, 0, 1, -2, 0, 2, -1, 0, 1 };
 	convolution->SetKernel(yCannyKernel);
 	Mat yDerivateImg = convolution->DoConvolution(bluredImg);
-	//imshow("Y-direction", yDerivateImg);
 
 	vector<vector<float>> gValue, dValue;
 	gValue.assign(width, vector<float>(height, 0));
@@ -217,13 +213,6 @@ int EdgeDetector::detectByCanny(const Mat& srcImg, Mat& dstImg) {
 	}
 
 	// Show result
-	// x-direction
-	xDerivateImg.convertTo(xDerivateImg, CV_8UC1);
-	imshow("X-direction", xDerivateImg);
-	// y-direction
-	yDerivateImg.convertTo(yDerivateImg, CV_8UC1);
-	imshow("Y-direction", yDerivateImg);
-	// Final result
 	imshow("Result", dstImg);
 
 	delete convolution;
