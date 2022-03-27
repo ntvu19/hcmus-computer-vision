@@ -143,12 +143,81 @@ Mat LocalFeature::detectBlob(const Mat& srcImg) {
 }
 
 Mat LocalFeature::detectDOG(const Mat& srcImg) {
-	// Wrong
-	Mat g1, g2, result;
-	GaussianBlur(srcImg, g1, Size(5, 5), 0.6);
-	GaussianBlur(srcImg, g2, Size(5, 5), 4.2);
-	result = g1 - g2;
-	return result;
+	// KeyPoint structure
+	struct KeyPoint {
+		int x, y;
+		double radius;
+	};
+
+	vector<KeyPoint> keyPoints;
+	int height = srcImg.rows,
+		width = srcImg.cols;
+	Mat DoG_Image[5];
+	Mat dstImg;
+
+	for (int i = 0; i < 5; i++) {
+		Mat g1, g2;
+		GaussianBlur(srcImg, g1, Size(2 * i + 1, 2 * i + 1), pow(2, i));
+		GaussianBlur(srcImg, g2, Size(2 * i + 3, 2 * i + 3), pow(2, i + 1));
+		DoG_Image[i] = g2 - g1;
+	}
+
+	// Find the keypoints
+	for (int a = 1; a < 4; a++) {
+		for (int i = 0; i < height - 2; i++) {
+			for (int j = 0; j < width - 2; j++) {
+				// Clone the 3x3 region of the LoG_Image(s)
+				Mat region[3];
+				for (int p = 0; p < 3; p++) {
+					region[p] = Mat(DoG_Image[a + p - 1], Rect(j, i, 3, 3));
+				}
+
+				// Max/Min (in 26 neighbors)
+				double min0, max0, min1, max1, min2, max2;
+				minMaxIdx(region[0], &min0, &max0);
+				minMaxIdx(region[1], &min1, &max1);
+				minMaxIdx(region[2], &min2, &max2);
+				double pixelValue = region[1].at<double>(1, 1);
+
+				if (pixelValue == min1) {
+					if (min1 < min0 && min1 < min2) {
+						KeyPoint kp;
+						kp.x = j + 1;
+						kp.y = i + 1;
+						kp.radius = pow(2, a) * sqrt(2);
+						keyPoints.push_back(kp);
+					}
+				}
+				else if (pixelValue == max1) {
+					if (max1 > max0 && max1 > max2) {
+						KeyPoint kp;
+						kp.x = j + 1;
+						kp.y = i + 1;
+						kp.radius = pow(2, a) * sqrt(2);
+						keyPoints.push_back(kp);
+					}
+				}
+			}
+		}
+	}
+
+	// Retain the keypoint with the largest radius in the same coordinate
+	for (int i = 0; i < keyPoints.size() - 1; i++) {
+		for (int j = 1; j < keyPoints.size(); j++) {
+			if ((keyPoints[i].x == keyPoints[j].x) && (keyPoints[i].y == keyPoints[j].y)) {
+				keyPoints[i].radius > keyPoints[j].radius ?
+					keyPoints.erase(keyPoints.begin() + j) : keyPoints.erase(keyPoints.begin() + i);
+			}
+		}
+	}
+
+	// Draw the circle
+	cvtColor(srcImg, dstImg, COLOR_BGR2GRAY);
+	cvtColor(dstImg, dstImg, COLOR_GRAY2BGR);
+	for (int i = 0; i < keyPoints.size(); i++) {
+		circle(dstImg, Point(keyPoints[i].x, keyPoints[i].y), keyPoints[i].radius, Scalar(0, 0, 255), 2);
+	}
+	return dstImg;
 }
 
 double LocalFeature::matchBySIFT(const Mat& img1, const Mat& img2, int detector) {
