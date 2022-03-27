@@ -13,7 +13,7 @@ int main(int argc, char** argv) {
 
 	// Initialize image by OpenCV
 	Mat srcImg = imread(inputPath, IMREAD_GRAYSCALE);
-	Mat dstImg, dst;
+	Mat dstImg;
 
 	// Check the source image is empty
 	if (!srcImg.data) {
