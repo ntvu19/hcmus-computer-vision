@@ -220,6 +220,35 @@ Mat LocalFeature::detectDOG(const Mat& srcImg) {
 	return dstImg;
 }
 
-double LocalFeature::matchBySIFT(const Mat& img1, const Mat& img2, int detector) {
+Mat LocalFeature::matchBySIFT(const Mat& srcImg1, const Mat& srcImg2) {
+	// Matching feature
+	Mat grayImg1, grayImg2;
+	vector<KeyPoint> keyPoints1, keyPoints2;
+	Mat descriptor1, descriptor2;
+	cvtColor(srcImg1, grayImg1, COLOR_BGR2GRAY);
+	cvtColor(srcImg2, grayImg2, COLOR_BGR2GRAY);
 
+	// Detecing keypoints and computing descriptor
+	Ptr<SIFT> detector = SIFT::create();
+	detector->detectAndCompute(grayImg1, noArray(), keyPoints1, descriptor1);
+	detector->detectAndCompute(grayImg2, noArray(), keyPoints2, descriptor2);
+
+	// Matching descriptor vectors with a FLANN based matcher
+	Ptr<DescriptorMatcher> matcher = DescriptorMatcher::create(DescriptorMatcher::FLANNBASED);
+	vector<vector<DMatch>> knnMatches;
+	matcher->knnMatch(descriptor1, descriptor2, knnMatches, 2);
+
+	// Filter matches using the Lowe's ratio test
+	const float ratio = 0.7;
+	vector<DMatch> goodMatches;
+	for (size_t i = 0; i < knnMatches.size(); i++) {
+		if (knnMatches[i][0].distance < ratio * knnMatches[i][1].distance) {
+			goodMatches.push_back(knnMatches[i][0]);
+		}
+	}
+
+	// Draw matches
+	Mat dstImg;
+	drawMatches(grayImg1, keyPoints1, grayImg2, keyPoints2, goodMatches, dstImg, Scalar::all(-1), Scalar::all(-1), vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
+	return dstImg;
 }
