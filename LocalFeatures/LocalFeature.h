@@ -1,6 +1,7 @@
 #pragma once
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include <opencv2/features2d.hpp>
 using namespace std;
 using namespace cv;
 
@@ -18,7 +19,7 @@ public:
 	Mat detectHarris(const Mat& srcImg);
 	Mat detectBlob(const Mat& srcImg);
 	Mat detectDOG(const Mat& srcImg);
-	double matchBySIFT(const Mat& img1, const Mat& img2, int detector);
+	Mat matchBySIFT(const Mat& srcImg1, const Mat& srcImg2);
 	LocalFeature();
 	~LocalFeature();
 };

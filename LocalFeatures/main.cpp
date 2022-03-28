@@ -55,16 +55,26 @@ int main(int argc, char** argv) {
 			return 1;
 		}
 	}
+	else if (string(argv[4]) == "-sift") {
+		string inputPath1 = string(argv[1]);
+		string inputPath2 = string(argv[2]);
+		string outputPath = string(argv[3]);
+		Mat srcImg1 = imread(inputPath1, IMREAD_COLOR);
+		Mat srcImg2 = imread(inputPath2, IMREAD_COLOR);
+		Mat dstImg = localFeature->matchBySIFT(srcImg1, srcImg2);
+		if (dstImg.data) {
+			imwrite(outputPath, dstImg);
+		}
+		else {
+			cout << "Could not detect the local feature of this image" << endl;
+			return 1;
+		}
+	}
 	else {
-		// Test here
-
-
-		// Comment the following lines and test then
 		cout << "Invalid method, please again!" << endl;
 		delete localFeature;
 		return 1;
 	}
-	
 
 	delete localFeature;
 	waitKey(0);
