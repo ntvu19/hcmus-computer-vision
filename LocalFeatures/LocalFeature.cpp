@@ -44,7 +44,8 @@ Mat LocalFeature::detectHarris(const Mat& srcImg) {
 	pow(gradientX2Gaussian + gradientY2Gaussian, 2.0, mtrace);
 	featureMap = (x2y2 - xy) - k * mtrace;
 
-	Mat dstNorm, dstImg = srcImg.clone();
+	Mat dstNorm, dstImg;
+	cvtColor(grayscaleImg, dstImg, COLOR_GRAY2BGR);
 	normalize(featureMap, dstNorm, 0, 255, NORM_MINMAX, CV_32FC1, Mat());
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {

@@ -3,13 +3,13 @@
 #include <string>
 using namespace std;
 
-// <Program.exe> <InputFilePath> <OutputFilePath> <method>
+// <Program.exe> <method> <OutputFilePath> <InputFilePath>
 int main(int argc, char** argv) {
 
 	// Read arguments
-	string inputPath = string(argv[1]);
+	string method = string(argv[1]);
 	string outputPath = string(argv[2]);
-	string method = string(argv[3]);
+	string inputPath = string(argv[3]);
 
 	// Initialize image using OpenCV
 	Mat srcImg = imread(inputPath, IMREAD_COLOR);
@@ -55,13 +55,10 @@ int main(int argc, char** argv) {
 			return 1;
 		}
 	}
-	else if (string(argv[4]) == "-sift") {
-		string inputPath1 = string(argv[1]);
-		string inputPath2 = string(argv[2]);
-		string outputPath = string(argv[3]);
-		Mat srcImg1 = imread(inputPath1, IMREAD_COLOR);
+	else if (method == "-sift") {
+		string inputPath2 = string(argv[4]);
 		Mat srcImg2 = imread(inputPath2, IMREAD_COLOR);
-		Mat dstImg = localFeature->matchBySIFT(srcImg1, srcImg2);
+		Mat dstImg = localFeature->matchBySIFT(srcImg, srcImg2);
 		if (dstImg.data) {
 			imwrite(outputPath, dstImg);
 		}
